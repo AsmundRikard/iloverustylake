@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>锈湖人格测试·隐藏结局版</title>
+<style>
+  :root{
+    --bg:#090807;
+    --bg2:#15110d;
+    --panel:rgba(14,12,10,.88);
+    --line:rgba(168,137,92,.22);
+    --text:#eadfc9;
+    --sub:#b8a889;
+    --gold:#9e7b49;
+    --gold2:#6b532e;
+    --shadow:0 16px 42px rgba(0,0,0,.5);
+    --accent:rgba(158,123,73,.28);
+  }
+  *{box-sizing:border-box}
+  html,body{
+    margin:0;min-height:100%;
+    background:
+      radial-gradient(circle at 16% 18%, rgba(132,88,50,.09), transparent 24%),
+      radial-gradient(circle at 82% 24%, rgba(120,120,120,.05), transparent 19%),
+      radial-gradient(circle at 50% 75%, rgba(90,58,50,.08), transparent 28%),
+      linear-gradient(180deg,var(--bg2),var(--bg));
+    color:var(--text);
+    font-family:"Georgia","Times New Roman","Songti SC","STSong","Noto Serif SC",serif;
+    overflow-x:hidden;
+    transition:background .5s ease;
+  }
+  body::before{
+    content:"";
+    position:fixed; inset:0; pointer-events:none;
+    background:repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,.02) 0px,
+      rgba(255,255,255,.02) 1px,
+      transparent 2px,
+      transparent 4px
+    );
+    opacity:.16;
+    mix-blend-mode:soft-light;
+    animation:flicker 8s linear infinite;
+  }
+  body::after{
+    content:"";
+    position:fixed; inset:-15%; pointer-events:none;
+    background:radial-gradient(circle, transparent 44%, rgba(0,0,0,.55) 78%, rgba(0,0,0,.82) 100%);
+    opacity:.96;
+  }
+
+  .routeOverlay{
+    position:fixed; inset:0; pointer-events:none; z-index:1;
+    transition:opacity .45s ease, background .45s ease;
+    opacity:.8;
+    mix-blend-mode:screen;
+  }
+
+  body.route-default .routeOverlay{
+    background:
+      radial-gradient(circle at 50% 50%, rgba(179,124,56,.08), transparent 24%);
+  }
+
+  body.route-mirror .routeOverlay{
+    background:
+      linear-gradient(115deg, transparent 0%, rgba(160,180,220,.04) 24%, transparent 34%, rgba(150,150,150,.04) 52%, transparent 66%),
+      radial-gradient(circle at 32% 24%, rgba(210,220,255,.06), transparent 18%),
+      radial-gradient(circle at 70% 68%, rgba(170,180,205,.05), transparent 24%);
+  }
+
+  body.route-lake .routeOverlay{
+    background:
+      repeating-radial-gradient(circle at 50% 72%, rgba(70,115,125,.045) 0 10px, transparent 11px 24px),
+      linear-gradient(180deg, rgba(40,70,80,.04), transparent 60%);
+  }
+
+  body.route-archive .routeOverlay{
+    background:
+      repeating-linear-gradient(90deg, rgba(170,140,95,.03) 0 2px, transparent 2px 28px),
+      repeating-linear-gradient(0deg, rgba(120,90,55,.025) 0 1px, transparent 1px 24px),
+      radial-gradient(circle at 30% 20%, rgba(190,160,110,.05), transparent 20%);
+  }
+
+  body.route-tower .routeOverlay{
+    background:
+      linear-gradient(180deg, rgba(205,170,90,.045), transparent 35%),
+      radial-gradient(circle at 50% 12%, rgba(235,205,150,.08), transparent 16%),
+      linear-gradient(90deg, transparent, rgba(200,175,120,.03), transparent);
+  }
+
+  body.route-corridor .routeOverlay{
+    background:
+      linear-gradient(90deg, rgba(150,120,90,.035), transparent 18%, transparent 82%, rgba(150,120,90,.035)),
+      repeating-linear-gradient(180deg, rgba(255,255,255,.015) 0 2px, transparent 2px 22px);
+  }
+
+  body.route-underground .routeOverlay{
+    background:
+      radial-gradient(circle at 50% 85%, rgba(70,105,110,.065), transparent 28%),
+      linear-gradient(180deg, transparent, rgba(40,60,65,.06) 70%, rgba(30,48,52,.08));
+  }
+
+  body.route-ending .routeOverlay{
+    background:
+      radial-gradient(circle at 50% 50%, rgba(200,170,110,.07), transparent 26%),
+      linear-gradient(135deg, rgba(160,120,70,.035), transparent 32%, transparent 68%, rgba(160,120,70,.035));
+  }
+
+  @keyframes flicker{
+    0%,100%{opacity:.14}
+    13%{opacity:.22}
+    19%{opacity:.17}
+    31%{opacity:.23}
+    52%{opacity:.15}
+    77%{opacity:.24}
+    90%{opacity:.18}
+  }
+  @keyframes fogFloat{
+    0%{transform:translateX(-1.2%) translateY(0)}
+    50%{transform:translateX(1.4%) translateY(1%)}
+    100%{transform:translateX(-1.2%) translateY(0)}
+  }
+  @keyframes reveal{
+    from{opacity:0; transform:translateY(12px) scale(.985)}
+    to{opacity:1; transform:translateY(0) scale(1)}
+  }
+  .fog{
+    position:fixed; inset:0; pointer-events:none; opacity:.15;
+    background:
+      radial-gradient(circle at 12% 34%, rgba(255,255,255,.10), transparent 22%),
+      radial-gradient(circle at 74% 20%, rgba(255,255,255,.08), transparent 18%),
+      radial-gradient(circle at 50% 78%, rgba(255,255,255,.05), transparent 24%);
+    filter:blur(34px);
+    animation:fogFloat 16s ease-in-out infinite;
+    z-index:1;
+  }
+  .wrap{
+    position:relative; z-index:2;
+    width:min(980px, 92vw);
+    margin:30px auto 42px;
+  }
+  .titleBox{
+    text-align:center;
+    padding:18px 10px 18px;
+  }
+  .tinyTop{
+    color:var(--sub);
+    letter-spacing:5px;
+    font-size:12px;
+    margin-bottom:10px;
+    animation:titleGlow 5.5s ease-in-out infinite;
+  }
+  @keyframes titleGlow{
+    0%,100%{opacity:.82;text-shadow:0 0 0 rgba(212,186,138,0)}
+    50%{opacity:1;text-shadow:0 0 12px rgba(212,186,138,.18)}
+  }
+  h1{
+    margin:0;
+    font-size:clamp(34px,6vw,66px);
+    font-weight:600;
+    letter-spacing:2px;
+    text-shadow:0 0 14px rgba(158,123,73,.12),0 0 28px rgba(0,0,0,.58);
+    animation:titleBreath 6s ease-in-out infinite;
+  }
+  @keyframes titleBreath{
+    0%,100%{transform:scale(1);filter:brightness(1)}
+    50%{transform:scale(1.012);filter:brightness(1.03)}
+  }
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:24px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    position:relative;
+    backdrop-filter: blur(7px);
+  }
+  .panel::before{
+    content:"";
+    position:absolute; inset:0; pointer-events:none;
+    background:
+      linear-gradient(135deg, rgba(158,123,73,.08), transparent 18%, transparent 80%, rgba(158,123,73,.05)),
+      radial-gradient(circle at top right, rgba(255,255,255,.04), transparent 20%);
+  }
+  .ornament{
+    height:62px;
+    border-bottom:1px solid rgba(255,255,255,.05);
+    background:
+      radial-gradient(circle at center, rgba(158,123,73,.14), transparent 26%),
+      linear-gradient(180deg, rgba(255,255,255,.02), transparent);
+    position:relative;
+  }
+  .ornament::before{
+    content:"☽";
+    position:absolute; left:50%; top:50%;
+    transform:translate(-50%,-50%);
+    color:#bfa272; font-size:26px; opacity:.82;
+    text-shadow:0 0 12px rgba(191,162,114,.16);
+  }
+  .screen{padding:24px; min-height:620px}
+  .fade{animation:reveal .35s ease both}
+  .topBar{
+    display:flex; justify-content:space-between; gap:12px; align-items:center;
+    flex-wrap:wrap; margin-bottom:14px;
+  }
+  .leftTop,.rightTop{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+  .pill{
+    padding:8px 12px; border-radius:999px;
+    border:1px solid rgba(255,255,255,.07);
+    background:rgba(255,255,255,.03);
+    color:var(--sub); font-size:12px; letter-spacing:1px;
+  }
+  .btn,.choiceBtn,.iconBtn,.option{
+    border:none; cursor:pointer; transition:.22s ease; font-family:inherit;
+  }
+  .btn{
+    padding:14px 26px;
+    border-radius:12px;
+    background:linear-gradient(180deg,var(--gold),var(--gold2));
+    color:#f4ead2; font-size:16px; letter-spacing:1px;
+    box-shadow:0 10px 24px rgba(0,0,0,.26);
+  }
+  .choiceBtn{
+    padding:14px 18px;
+    border-radius:12px;
+    background:linear-gradient(180deg,#2b2926,#1a1816);
+    color:#ddd1bb;
+    border:1px solid rgba(255,255,255,.08);
+    font-size:15px;
+  }
+  .iconBtn{
+    width:44px; height:44px; border-radius:12px;
+    background:linear-gradient(180deg,#2f2c28,#171614);
+    color:#decda9; border:1px solid rgba(255,255,255,.07); font-size:18px;
+  }
+  .btn:hover,.choiceBtn:hover,.iconBtn:hover,.option:hover{transform:translateY(-1px); filter:brightness(1.05)}
+  .intro{
+    text-align:center;
+    padding:34px 18px 26px;
+  }
+  .introTitle{
+    font-size:clamp(24px,4vw,40px);
+    margin:6px 0 18px;
+    letter-spacing:2px;
+  }
+  .typewriter{
+    max-width:760px;
+    margin:0 auto 22px;
+    color:#ddd0b8;
+    line-height:2;
+    font-size:18px;
+    min-height:180px;
+    text-align:center;
+  }
+  .choiceRow{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:16px}
+  .progressWrap{margin:12px 0 18px}
+  .progressText{color:var(--sub); font-size:13px; margin-bottom:8px; letter-spacing:1px}
+  .progress{
+    height:10px; border-radius:999px; overflow:hidden;
+    background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.05);
+  }
+  .bar{
+    height:100%; width:0%;
+    background:linear-gradient(90deg,#5d492a,#b99357,#5d492a);
+    box-shadow:0 0 20px rgba(158,123,73,.25);
+    transition:width .35s ease;
+  }
+  .chapter{
+    text-align:center; color:#cdb17f; font-size:13px; letter-spacing:2px; margin-bottom:10px;
+  }
+  .question{
+    text-align:center;
+    font-size:clamp(22px,3.2vw,34px);
+    line-height:1.7;
+    margin:10px 0 18px;
+    text-shadow:0 0 14px rgba(0,0,0,.28);
+  }
+  .questionHint{
+    text-align:center; color:var(--sub); font-size:13px; margin:0 0 18px; letter-spacing:1px;
+  }
+  .options{
+    display:grid; grid-template-columns:1fr 1fr; gap:14px;
+  }
+  .option{
+    position:relative; overflow:hidden; min-height:88px;
+    padding:18px 16px; text-align:left; border-radius:16px; color:var(--text);
+    background:linear-gradient(180deg, rgba(72,60,47,.55), rgba(34,29,24,.72));
+    border:1px solid rgba(158,123,73,.20);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);
+    line-height:1.8; font-size:15px;
+  }
+  .option::before{
+    content:"";
+    position:absolute; left:-55%; top:0; width:36%; height:100%;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,.055), transparent);
+    transform:skewX(-20deg); transition:.4s ease;
+  }
+  .option:hover::before{left:120%}
+  .option small{display:block; color:#af9365; letter-spacing:1px; margin-bottom:6px}
+  .pathBox,.scoreBoard,.endingTypeBox{
+    margin-top:16px; padding:16px;
+    border-radius:16px; background:rgba(255,255,255,.025);
+    border:1px solid rgba(255,255,255,.06);
+  }
+  .pathTitle,.scoreTitle,.endingTypeTitle{
+    text-align:center; color:var(--sub); font-size:13px; letter-spacing:2px; margin-bottom:10px;
+  }
+  .pathTrail{
+    display:flex; gap:8px; flex-wrap:wrap; justify-content:center;
+  }
+  .pathStep{
+    padding:8px 10px; border-radius:999px; background:rgba(0,0,0,.16);
+    color:#d9ccb5; font-size:12px; border:1px solid rgba(255,255,255,.05);
+  }
+  .endingCard{animation:reveal .45s ease both}
+  .endingHead{text-align:center;margin-bottom:18px}
+  .endingHead .tiny{color:var(--sub);letter-spacing:4px;font-size:12px;margin-bottom:10px}
+  .endingName{font-size:clamp(30px,5vw,56px);margin:0 0 8px;letter-spacing:2px}
+  .endingTitle{color:#d3b686;font-size:18px;margin-bottom:16px}
+  .endingDesc{
+    max-width:760px;margin:0 auto 18px;color:#ddd0b8;
+    line-height:2;font-size:16px;text-align:left;
+  }
+  .archive{
+    max-width:820px;margin:0 auto 18px;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+  }
+  .archiveItem{
+    border-radius:14px;padding:14px 12px;
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(158,123,73,.16);
+    color:#d6c6a7;text-align:center;line-height:1.6;font-size:14px;
+  }
+  .tarot{
+    max-width:420px;margin:18px auto 22px;padding:20px 16px 18px;
+    border-radius:20px;border:1px solid rgba(191,162,114,.22);
+    background:
+      linear-gradient(180deg, rgba(74,54,33,.35), rgba(18,16,14,.75)),
+      radial-gradient(circle at top, rgba(255,255,255,.04), transparent 30%);
+    box-shadow:0 18px 36px rgba(0,0,0,.28), inset 0 0 0 1px rgba(255,255,255,.02);
+    text-align:center;position:relative;
+  }
+  .tarot::before,.tarot::after{content:"✦";position:absolute;color:#c8ab76;opacity:.55;font-size:16px;}
+  .tarot::before{left:18px;top:16px}
+  .tarot::after{right:18px;bottom:16px}
+  .tarotSymbol{font-size:34px;color:#d4ba8a;margin-bottom:10px}
+  .tarotName{font-size:22px;letter-spacing:2px;margin-bottom:4px}
+  .tarotSub{font-size:13px;letter-spacing:2px;color:var(--sub)}
+  .scoreGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+  .scoreItem{
+    display:flex;justify-content:space-between;gap:12px;
+    padding:10px 12px;border-radius:10px;
+    background:rgba(0,0,0,.16);color:#d9ccb5;font-size:14px;
+  }
+  .endingTypeTag{
+    margin:0 auto;
+    width:max-content;
+    padding:8px 14px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.08);
+    background:rgba(255,255,255,.03);
+    color:#e2cfaa;
+    font-size:13px;
+    letter-spacing:2px;
+  }
+  .audioStatus{color:#d4c19a;font-size:13px;text-align:center;margin:10px 0 0;min-height:18px;}
+  
+  .screenFlash{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:5;
+    opacity:0;
+    background:
+      radial-gradient(circle at center, rgba(240,230,210,.08), rgba(255,255,255,0) 35%),
+      rgba(245,240,230,.06);
+    transition:opacity .22s ease;
+  }
+  .screenFlash.active{opacity:1}
+  .chapterOverlay{
+    position:fixed;
+    inset:0;
+    z-index:6;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:none;
+    opacity:0;
+    background:rgba(5,5,5,.72);
+    backdrop-filter: blur(4px);
+    transition:opacity .28s ease;
+  }
+  .chapterOverlay.show{opacity:1}
+  .chapterCard{
+    min-width:min(82vw,560px);
+    padding:26px 24px;
+    border-radius:20px;
+    border:1px solid rgba(212,186,138,.18);
+    background:
+      linear-gradient(180deg, rgba(48,39,29,.92), rgba(18,15,12,.96)),
+      radial-gradient(circle at top, rgba(255,255,255,.04), transparent 28%);
+    box-shadow:0 20px 50px rgba(0,0,0,.45);
+    text-align:center;
+    transform:translateY(8px) scale(.985);
+    transition:transform .28s ease;
+  }
+  .chapterOverlay.show .chapterCard{transform:translateY(0) scale(1)}
+  .chapterCardSmall{
+    color:#c9b188;
+    letter-spacing:4px;
+    font-size:12px;
+    margin-bottom:10px;
+  }
+  .chapterCardTitle{
+    font-size:clamp(24px,4vw,36px);
+    letter-spacing:2px;
+    color:#f0e4ca;
+    margin-bottom:8px;
+  }
+  .chapterCardSub{
+    color:#b8a889;
+    font-size:14px;
+    letter-spacing:1px;
+    line-height:1.9;
+  }
+  .titleBox{position:relative}
+  .titleBox::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    bottom:4px;
+    width:min(160px,45vw);
+    height:1px;
+    background:linear-gradient(90deg, transparent, rgba(212,186,138,.45), transparent);
+  }
+  .introTitle{
+    text-shadow:0 0 12px rgba(212,186,138,.08);
+  }
+  .panel{
+    overflow:visible;
+  }
+  .panel::after{
+    content:"";
+    position:absolute;
+    inset:10px;
+    border-radius:20px;
+    pointer-events:none;
+    border:1px solid rgba(255,255,255,.025);
+  }
+  .endingCard .tarot{
+    overflow:hidden;
+  }
+  .endingCard .tarot::after{
+    content:"";
+    position:absolute;
+    inset:18px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.06);
+    pointer-events:none;
+  }
+  .portraitGlow{
+    width:min(280px,72vw);
+    height:180px;
+    margin:0 auto 16px;
+    border-radius:18px;
+    position:relative;
+    background:
+      radial-gradient(circle at 50% 30%, rgba(220,200,160,.16), transparent 28%),
+      linear-gradient(180deg, rgba(255,255,255,.04), transparent 35%),
+      linear-gradient(180deg, rgba(70,55,38,.34), rgba(20,18,16,.18));
+    border:1px solid rgba(212,186,138,.12);
+    overflow:hidden;
+  }
+  .portraitGlow::before{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:18px;
+    transform:translateX(-50%);
+    width:78px;
+    height:78px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(235,220,185,.18), rgba(235,220,185,.02) 55%, transparent 72%);
+    filter:blur(1px);
+  }
+  .portraitGlow::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    bottom:-12px;
+    transform:translateX(-50%);
+    width:128px;
+    height:136px;
+    border-radius:60px 60px 18px 18px;
+    background:linear-gradient(180deg, rgba(230,215,180,.13), rgba(230,215,180,.02) 42%, transparent 100%);
+    filter:blur(1px);
+  }
+  .endingDesc{
+    background:rgba(255,255,255,.015);
+    padding:18px 18px 16px;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.04);
+  }
+  .choiceBtn.shareBtn{
+    background:linear-gradient(180deg,#403425,#241d15);
+  }
+
+
+  .blackoutOverlay{
+    position:fixed; inset:0; z-index:7;
+    background:rgba(0,0,0,.96);
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none; transition:opacity .45s ease;
+  }
+  .blackoutOverlay.show{opacity:1}
+  .blackoutText{
+    color:#f0e4ca; text-align:center; max-width:min(760px,84vw);
+    line-height:2.1; font-size:clamp(20px,3vw,34px); letter-spacing:2px;
+    text-shadow:0 0 18px rgba(212,186,138,.12);
+    white-space:pre-line;
+  }
+  .secretBtn{
+    position:fixed; right:14px; bottom:14px; z-index:4;
+    width:18px; height:18px; border-radius:50%;
+    background:rgba(220,200,160,.08); border:1px solid rgba(220,200,160,.08);
+    box-shadow:0 0 12px rgba(220,200,160,.08);
+    cursor:pointer; transition:.25s ease;
+  }
+  .secretBtn:hover{transform:scale(1.15); background:rgba(220,200,160,.14)}
+  .ngTag{
+    margin:0 auto 14px; width:max-content;
+    padding:8px 14px; border-radius:999px;
+    border:1px solid rgba(212,186,138,.16);
+    background:rgba(212,186,138,.05);
+    color:#ead9b6; font-size:12px; letter-spacing:2px;
+  }
+
+  @media (max-width:760px){
+    .screen{padding:16px}
+    .options,.archive,.scoreGrid{grid-template-columns:1fr}
+    .typewriter{min-height:210px;font-size:17px}
+  }
+</style>
+</head>
+<body class="route-default">
+<div class="routeOverlay"></div>
+<div class="fog"></div>
+<div class="blackoutOverlay" id="blackoutOverlay"><div class="blackoutText" id="blackoutText"></div></div>
+<div class="screenFlash" id="screenFlash"></div>
+<div class="chapterOverlay" id="chapterOverlay"><div class="chapterCard"><div class="chapterCardSmall" id="chapterSmall"></div><div class="chapterCardTitle" id="chapterTitle"></div><div class="chapterCardSub" id="chapterSub"></div></div></div>
+
+<div class="wrap">
+  <div class="titleBox">
+    <div class="tinyTop">RUSTY · LAKE · MEMORY · REBIRTH</div>
+    <h1>锈湖人格测试</h1>
+  </div>
+  <div class="panel">
+    <div class="ornament"></div>
+    <div class="screen" id="app"></div>
+  </div>
+</div>
+
+<script>
+const endings = {
+  owl:{symbol:"🦉",name:"Mr. Owl",title:"高塔中的操盘者",desc:"你更愿意站在更高处俯视局面。你知道秘密的价值，也知道秩序往往不是温柔建立起来的。你不喜欢失控，所以总在提前布局。对你来说，结局不是被等待的，而是被推向完成的。",traits:["掌控局面","布局思维","冷静克制"]},
+  crow:{symbol:"🐦",name:"Mr. Crow",title:"沉默的记录者",desc:"你不急于做出结论，你先观察，再记住，再连接。别人忽略的细节，在你眼里往往正是答案的入口。你更像站在阴影中的见证者，不大声说话，却总能记住真正重要的东西。",traits:["观察敏锐","理性克制","擅长追踪"]},
+  dale:{symbol:"🕵️",name:"Dale Vandermeer",title:"雾中的追索者",desc:"你面对诡异不会立刻退后，反而更想靠近一点，看看迷雾背后到底是什么。你相信真相必须被找到，即使过程危险、复杂、令人不安。你是会继续往前的人。",traits:["追索真相","行动力高","不怕迷雾"]},
+  laura:{symbol:"👁️",name:"Laura Vanderboom",title:"被记忆包围的人",desc:"你的感受力很深，世界在你那里总会留下回响。你能听见别人听不见的暗潮，也更容易被旧梦、旧事和未完成的情绪击中。你不是脆弱，而是离那些隐藏的东西更近。",traits:["情绪细腻","共情很强","梦境感重"]},
+  harvey:{symbol:"🦜",name:"Harvey",title:"忠诚的执行者",desc:"你不是最张扬的那一个，却常常是最稳的那一个。你会在真正需要的时候站出来，把散乱的局面收拢，把不可能的事情一点点做成。你不是旁观者，你是能扛事的人。",traits:["执行稳定","踏实可靠","耐受力高"]},
+  albert:{symbol:"🔥",name:"Albert Vanderboom",title:"危险的野心家",desc:"你不甘于被安排，也很少甘心停在原地。你想得到答案，也想得到力量，更想撬开规则本身。你的优点是锋利、果断、有魄力；你的危险也藏在同样的地方。",traits:["野心强烈","敢于冒险","不肯屈从"]},
+  rose:{symbol:"🌹",name:"Rose",title:"温柔的缝合者",desc:"你总会下意识地想把碎掉的东西重新拼起来。别人看见的是崩塌，你看见的却是仍有可能保住的部分。你不是靠锋芒取胜，而是靠安静、忍耐和不肯放弃。",traits:["修复能力","温和坚韧","愿意承担"]},
+  william:{symbol:"⏳",name:"William Vanderboom",title:"被命运追逐的旅人",desc:"你会不停思考命运、选择和代价。你不是不敢行动，而是比很多人都更清楚一个选择会在心里留下多深的回声。你总在问：如果一切都像循环，我到底还能改写什么？",traits:["宿命感强","自省很深","思考意义"]},
+  elizabeth:{symbol:"🕯️",name:"Elizabeth",title:"优雅而压抑的秘密持有者",desc:"你重视边界、秩序和体面，习惯把真正的情绪藏在安静之后。你很少让别人轻易走进内心，但这不代表你没有波澜。你只是更懂得把波澜藏进灯影里。",traits:["边界清晰","克制体面","情绪内敛"]},
+  bob:{symbol:"📼",name:"Bob",title:"被现实拖住的人",desc:"你不是不勇敢，你只是很清楚什么叫失衡、疲惫和害怕。你会优先考虑能不能安全离开，能不能让生活恢复正常。你很真实，也因此非常接近“普通人”最深的部分。",traits:["现实敏感","需要安全感","反应真实"]}
+};
+
+const specialEndings = {
+  true_end:{
+    symbol:"☽",
+    name:"The White Door",
+    title:"真结局 · 白门之后",
+    desc:"你一路没有被最直白的诱导带偏，也没有在最轻易后退的时刻停下。你看见的不只是答案，而是答案背后的结构。对白门而言，真正重要的不是你选了哪一条路，而是你始终没有把自己交给任何一条现成的路。门开了。湖面没有再响，你也终于看见：循环并不是为了困住人，而是为了筛出真正会记住的人。",
+    traits:["识破诱导","保持清醒","穿过循环"]
+  },
+  hidden_end:{
+    symbol:"◈",
+    name:"The Hidden Lake",
+    title:"隐藏结局 · 湖底来信",
+    desc:"你在路径里留下了太多“回头看”的痕迹，也记住了太多别人本该忘掉的东西。旅馆没有送你离开，而是把一封本不该存在的信交到了你手里。信上只有一句话：‘你已经来过很多次。’这不是普通结局，因为湖记住了你，甚至早在你开门之前，就已经在等你。",
+    traits:["被湖记住","触发回声","隐藏来信"]
+  },
+  false_end:{
+    symbol:"✕",
+    name:"The False Exit",
+    title:"假结局 · 错门外侧",
+    desc:"你太快把“离开”当成了结局。门确实打开了，走廊也确实消失了，但外面并不是白天，而是一条更安静、更空的走廊。你以为已经结束，其实只是走进了更像出口的那一层壳。对锈湖来说，最危险的不是恐惧，而是过早相信自己已经安全。",
+    traits:["过早离开","错把出口","二层走廊"]
+  }
+};
+
+const introLines = [
+  "夜里十二点，旅馆最深处的钟声又响了一次。",
+  "走廊分成四条路：镜厅、湖边、档案室、高塔。",
+  "你的每一次选择，都会改变后面遇见的问题。",
+  "做完一轮以后，旅馆也许会开始认出你。"
+];
+
+const nodes = {
+  start:{chapter:"序章",pathLabel:"起点",route:"default",q:"你先推开哪一扇门？",options:[
+    {text:"镜厅。先看看镜中的东西会不会先认出我。",next:"mirror_1",score:{jacob:1,laura:1,crow:1},tag:"mirror"},
+    {text:"湖边。水里藏东西的时候，声音通常最诚实。",next:"lake_1",score:{laura:2,william:1,rose:1},tag:"lake"},
+    {text:"档案室。想知道这里发生过什么，先翻记录。",next:"archive_1",score:{crow:2,dale:1,frank:1},tag:"archive"},
+    {text:"高塔。越高的地方，越接近掌控全局的人。",next:"tower_1",score:{owl:2,albert:1,elizabeth:1},tag:"tower"}
+  ]},
+
+  mirror_1:{chapter:"第一章",pathLabel:"镜厅",route:"mirror",q:"镜子里出现的不是你，而是小时候的自己。你会——",options:[
+    {text:"盯着看，想知道它到底记得什么。",next:"mirror_2",score:{jacob:2,laura:1,crow:1},tag:"watch"},
+    {text:"先观察房间里还有没有别的异常。",next:"mirror_2",score:{crow:2,frank:1,dale:1},tag:"observe"},
+    {text:"伸手去碰镜面，试试它会不会回应。",next:"mirror_2",score:{laura:2,william:1},tag:"touch"},
+    {text:"后退半步，怀疑这是一种诱导。",next:"mirror_2",score:{owl:1,elizabeth:1,bob:1},tag:"retreat"}
+  ]},
+  mirror_2:{chapter:"第二章",pathLabel:"镜厅",route:"mirror",q:"镜中孩子递来一张照片，背面写着“回头”。你会——",options:[
+    {text:"立刻回头。",next:"mirror_3",score:{dale:2,bob:1},tag:"lookback"},
+    {text:"不回头，继续看照片上的细节。",next:"mirror_3",score:{crow:2,jacob:2},tag:"observe"},
+    {text:"把照片收起来，不让它拿回去。",next:"mirror_3",score:{frank:2,elizabeth:1},tag:"keep"},
+    {text:"问它：这是过去，还是未来？",next:"mirror_3",score:{william:2,laura:1},tag:"fate"}
+  ]},
+  mirror_3:{chapter:"第三章",pathLabel:"镜厅",route:"mirror",q:"你发现唯一没有映进镜中的，是桌上的怀表。你会——",options:[
+    {text:"拿起怀表，听它是不是在倒着走。",next:"mirror_4",score:{crow:2,william:1},tag:"observe"},
+    {text:"把怀表对准镜子，测试规则。",next:"mirror_4",score:{dale:2,owl:1},tag:"test"},
+    {text:"把怀表收进口袋，先保留证物。",next:"mirror_4",score:{frank:2,elizabeth:1},tag:"keep"},
+    {text:"突然觉得这东西本来属于死人。",next:"mirror_4",score:{laura:2,jacob:1},tag:"memory"}
+  ]},
+  mirror_4:{chapter:"第四章",pathLabel:"镜厅",route:"mirror",q:"镜面突然开裂，每一块碎片里都映着不同年龄的你。你更在意——",options:[
+    {text:"哪一块最像现在的我。",next:"cross_1",score:{jacob:2,laura:1},tag:"self"},
+    {text:"哪一块在看我，而不是被我看。",next:"cross_1",score:{crow:2,frank:2},tag:"observe"},
+    {text:"能不能拼回去，恢复原来的样子。",next:"cross_1",score:{rose:2,harvey:1,bob:1},tag:"repair"},
+    {text:"不拼了，踩碎它继续走。",next:"cross_1",score:{albert:2,owl:1},tag:"break"}
+  ]},
+
+  lake_1:{chapter:"第一章",pathLabel:"湖边",route:"lake",q:"湖面漂着一只黑色方盒。你会——",options:[
+    {text:"把盒子捞上来。",next:"lake_2",score:{dale:2,harvey:1,crow:1},tag:"brave"},
+    {text:"先看湖里的倒影，不碰盒子。",next:"lake_2",score:{laura:2,william:1,jacob:1},tag:"observe"},
+    {text:"绕到远处，看看盒子是不是被故意放在这里。",next:"lake_2",score:{crow:2,frank:1},tag:"trace"},
+    {text:"直接把盒子踢回水里。",next:"lake_2",score:{bob:2,albert:1},tag:"escape"}
+  ]},
+  lake_2:{chapter:"第二章",pathLabel:"湖边",route:"lake",q:"盒子里只有一把钥匙和一缕湿头发。你更在意——",options:[
+    {text:"钥匙能打开哪里。",next:"lake_3",score:{dale:2,crow:1},tag:"door"},
+    {text:"头发属于谁。",next:"lake_3",score:{jacob:2,laura:1},tag:"memory"},
+    {text:"是谁故意把它留给我。",next:"lake_3",score:{crow:2,frank:1,owl:1},tag:"observe"},
+    {text:"把盒子重新合上，当没见过。",next:"lake_3",score:{elizabeth:1,bob:2},tag:"escape"}
+  ]},
+  lake_3:{chapter:"第三章",pathLabel:"湖边",route:"lake",q:"湖里的倒影比你多站了一个人。你会——",options:[
+    {text:"回头看现实里有没有那个人。",next:"lake_4",score:{bob:1,dale:2},tag:"lookback"},
+    {text:"盯住倒影，不让它先移开视线。",next:"lake_4",score:{laura:2,jacob:2},tag:"watch"},
+    {text:"假装看不见，慢慢后退。",next:"lake_4",score:{frank:2,elizabeth:1},tag:"escape"},
+    {text:"伸手搅乱水面。",next:"lake_4",score:{albert:1,dale:1,owl:1},tag:"test"}
+  ]},
+  lake_4:{chapter:"第四章",pathLabel:"湖边",route:"lake",q:"岸边泥地上有两组脚印，一组向湖里去，一组从湖里出来。你更相信——",options:[
+    {text:"有人落水又自己爬了回来。",next:"cross_1",score:{bob:1,harvey:1,dale:1},tag:"real"},
+    {text:"不是人，是别的东西上了岸。",next:"cross_1",score:{laura:2,william:1},tag:"memory"},
+    {text:"脚印是故意摆给我看的。",next:"cross_1",score:{crow:2,owl:1,frank:1},tag:"observe"},
+    {text:"重要的不是原因，而是下一步怎么利用它。",next:"cross_1",score:{albert:2,owl:1},tag:"control"}
+  ]},
+
+  archive_1:{chapter:"第一章",pathLabel:"档案室",route:"archive",q:"档案室里有四类抽屉：病例、家谱、失踪名单、未寄出的信。你先拉开——",options:[
+    {text:"病例。",next:"archive_2",score:{crow:2,dale:1},tag:"observe"},
+    {text:"家谱。",next:"archive_2",score:{william:1,owl:1,jacob:1},tag:"blood"},
+    {text:"失踪名单。",next:"archive_2",score:{dale:2,frank:1},tag:"trace"},
+    {text:"未寄出的信。",next:"archive_2",score:{laura:1,elizabeth:1,jacob:1},tag:"memory"}
+  ]},
+  archive_2:{chapter:"第二章",pathLabel:"档案室",route:"archive",q:"你翻到一页资料，上面夹着你自己的照片，但名字不是你的。你会——",options:[
+    {text:"查这个名字还关联了谁。",next:"archive_3",score:{crow:2,dale:1},tag:"observe"},
+    {text:"怀疑自己被替换过身份。",next:"archive_3",score:{jacob:2,william:1},tag:"identity"},
+    {text:"把这份资料偷走。",next:"archive_3",score:{frank:2,elizabeth:1},tag:"keep"},
+    {text:"立刻去找写下它的人。",next:"archive_3",score:{dale:2,harvey:1},tag:"brave"}
+  ]},
+  archive_3:{chapter:"第三章",pathLabel:"档案室",route:"archive",q:"家谱上有一个名字被反复划掉又写回。你觉得更可能是——",options:[
+    {text:"有人想抹去一个不该存在的人。",next:"archive_4",score:{jacob:2,laura:1},tag:"memory"},
+    {text:"有人想夺走这条血脉的位置。",next:"archive_4",score:{albert:2,owl:1},tag:"control"},
+    {text:"有人在试图纠正错误记录。",next:"archive_4",score:{crow:2,william:1},tag:"observe"},
+    {text:"有人舍不得彻底删掉他。",next:"archive_4",score:{rose:1,elizabeth:1,bob:1},tag:"repair"}
+  ]},
+  archive_4:{chapter:"第四章",pathLabel:"档案室",route:"archive",q:"失踪名单最底下多了一行刚写上的字：‘下一个是你。’你会——",options:[
+    {text:"检查墨迹是不是刚写的。",next:"cross_1",score:{crow:2,frank:1},tag:"observe"},
+    {text:"拿走名单，不能让它留在这里。",next:"cross_1",score:{harvey:1,dale:1,frank:1},tag:"keep"},
+    {text:"觉得这不是威胁，是预告。",next:"cross_1",score:{william:2,laura:1},tag:"fate"},
+    {text:"立刻离开档案室。",next:"cross_1",score:{bob:2,elizabeth:1},tag:"escape"}
+  ]},
+
+  tower_1:{chapter:"第一章",pathLabel:"高塔",route:"tower",q:"高塔最上层坐着一个背对你的人。你会先——",options:[
+    {text:"直接开口，问他在等谁。",next:"tower_2",score:{owl:1,dale:1,william:1},tag:"brave"},
+    {text:"不出声，观察他的手边放了什么。",next:"tower_2",score:{crow:2,frank:1},tag:"observe"},
+    {text:"走近一点，想看清他的脸。",next:"tower_2",score:{dale:2,laura:1},tag:"approach"},
+    {text:"先看窗外，确认塔下全景。",next:"tower_2",score:{owl:2,elizabeth:1},tag:"control"}
+  ]},
+  tower_2:{chapter:"第二章",pathLabel:"高塔",route:"tower",q:"那人说：‘我在等做出和我一样选择的人。’你会——",options:[
+    {text:"问他当年选了什么。",next:"tower_3",score:{william:1,dale:2},tag:"fate"},
+    {text:"问他后悔了吗。",next:"tower_3",score:{jacob:1,laura:1,william:1},tag:"memory"},
+    {text:"觉得这是试探，不回答。",next:"tower_3",score:{elizabeth:2,crow:1},tag:"retreat"},
+    {text:"告诉他：我不会和你一样。",next:"tower_3",score:{albert:2,owl:1},tag:"break"}
+  ]},
+  tower_3:{chapter:"第三章",pathLabel:"高塔",route:"tower",q:"他手边放着一张棋盘，黑白双方都只差最后一步。你会——",options:[
+    {text:"先判断谁占优势。",next:"tower_4",score:{crow:2,owl:1},tag:"observe"},
+    {text:"直接落下一子。",next:"tower_4",score:{owl:2,albert:1},tag:"control"},
+    {text:"不碰棋盘，问残局是谁留下的。",next:"tower_4",score:{dale:2,william:1},tag:"brave"},
+    {text:"怀疑这盘棋其实在映射你自己。",next:"tower_4",score:{jacob:1,laura:1,william:1},tag:"self"}
+  ]},
+  tower_4:{chapter:"第四章",pathLabel:"高塔",route:"tower",q:"从塔顶往下看，旅馆的路像一张机关图。你第一反应是——",options:[
+    {text:"终于看清全局了。",next:"cross_1",score:{owl:3},tag:"control"},
+    {text:"原来每条路都通向同一个地方。",next:"cross_1",score:{william:2,laura:1},tag:"fate"},
+    {text:"我要把这张结构记下来。",next:"cross_1",score:{crow:2,frank:1},tag:"observe"},
+    {text:"这么高，让我有点想逃。",next:"cross_1",score:{bob:2,rose:1},tag:"escape"}
+  ]},
+
+  cross_1:{chapter:"第五章",pathLabel:"走廊",route:"corridor",q:"四条路在一条狭长走廊重新汇合。墙上挂着一幅倒置的全家福。你会——",options:[
+    {text:"先看每个人的眼睛在看哪里。",next:"cross_2",score:{crow:2,frank:1},tag:"observe"},
+    {text:"先把相框翻正。",next:"cross_2",score:{rose:2,harvey:1},tag:"repair"},
+    {text:"先数一数照片里到底有几个人。",next:"cross_2",score:{dale:2,crow:1},tag:"trace"},
+    {text:"先怀疑少了谁。",next:"cross_2",score:{jacob:2,laura:1,william:1},tag:"memory"}
+  ]},
+  cross_2:{chapter:"第六章",pathLabel:"走廊",route:"corridor",q:"照片背后藏着一把小刀和一句话：‘不要相信第一扇门。’你会——",options:[
+    {text:"把刀收起来，以备不时之需。",next:"cross_3",score:{frank:1,harvey:1,albert:1},tag:"keep"},
+    {text:"把刀留在原处，只记住那句话。",next:"cross_3",score:{elizabeth:2,crow:1},tag:"observe"},
+    {text:"怀疑“第一扇门”指的是你最开始的选择。",next:"cross_3",score:{william:2,dale:1},tag:"fate"},
+    {text:"决定反过来更相信第一扇门。",next:"cross_3",score:{owl:1,albert:2},tag:"control"}
+  ]},
+  cross_3:{chapter:"第七章",pathLabel:"旅馆深处",route:"corridor",q:"你听见某个房间里传来持续不断的敲击声。你会——",options:[
+    {text:"立刻开门。",next:"cross_4",score:{dale:2,albert:1},tag:"brave"},
+    {text:"先贴近门板听声音。",next:"cross_4",score:{crow:2,frank:1},tag:"observe"},
+    {text:"先确认四周有没有别的出口。",next:"cross_4",score:{bob:1,harvey:1,elizabeth:1},tag:"escape"},
+    {text:"先问：里面的是谁。",next:"cross_4",score:{laura:2,william:1},tag:"memory"}
+  ]},
+  cross_4:{chapter:"第八章",pathLabel:"旅馆深处",route:"corridor",q:"门后不是房间，而是一段向下的楼梯。越往下走，空气越像水。你会——",options:[
+    {text:"继续往下，不要停。",next:"cross_5",score:{dale:2,owl:1},tag:"brave"},
+    {text:"一边走一边数台阶。",next:"cross_5",score:{crow:2,william:1},tag:"observe"},
+    {text:"摸着墙，确认有没有机关。",next:"cross_5",score:{frank:2,harvey:1},tag:"trace"},
+    {text:"开始怀疑自己其实已经走过这里。",next:"cross_5",score:{laura:2,jacob:1},tag:"memory"}
+  ]},
+
+  cross_5:{chapter:"第九章",pathLabel:"地下",route:"underground",q:"楼梯尽头是一间灌着浅水的房间，中央摆着一张空椅子。你会——",options:[
+    {text:"坐上去，看看会发生什么。",next:"cross_6",score:{albert:1,dale:1,owl:1},tag:"test"},
+    {text:"绕着椅子走一圈，先观察。",next:"cross_6",score:{crow:2,frank:1},tag:"observe"},
+    {text:"把椅子拖离水中央。",next:"cross_6",score:{rose:2,harvey:1},tag:"repair"},
+    {text:"觉得那把椅子像是在等某个人。",next:"cross_6",score:{laura:2,jacob:2},tag:"memory"}
+  ]},
+  cross_6:{chapter:"第十章",pathLabel:"地下",route:"underground",q:"天花板上垂下一根细绳，绳尾绑着一把钥匙。你第一反应是——",options:[
+    {text:"直接去拿。",next:"cross_7",score:{dale:2,albert:1},tag:"brave"},
+    {text:"先看水里有没有倒影异常。",next:"cross_7",score:{laura:2,crow:1},tag:"observe"},
+    {text:"先怀疑这把钥匙会打开什么代价。",next:"cross_7",score:{william:2,elizabeth:1},tag:"fate"},
+    {text:"先想有没有更安全的拿法。",next:"cross_7",score:{harvey:1,bob:1,frank:1},tag:"escape"}
+  ]},
+  cross_7:{chapter:"第十一章",pathLabel:"地下",route:"underground",q:"你拿到钥匙后，房间另一侧出现两扇门：一扇写着‘记住’，一扇写着‘离开’。你更想——",options:[
+    {text:"选‘记住’，因为有些东西必须留下。",next:"cross_8",score:{crow:1,laura:1,jacob:1},tag:"remember"},
+    {text:"选‘离开’，因为先活着最重要。",next:"cross_8",score:{bob:2,rose:1},tag:"leave"},
+    {text:"怀疑这两扇门都是假的。",next:"cross_8",score:{owl:1,frank:2},tag:"observe"},
+    {text:"试着同时研究两扇门的差别。",next:"cross_8",score:{dale:2,william:1},tag:"trace"}
+  ]},
+  cross_8:{chapter:"第十二章",pathLabel:"终厅",route:"ending",q:"最后一间房里，桌上放着纸和墨，墙上写着：‘只能写下一种东西。’你最想写的是——",options:[
+    {text:"全部细节。以后总有人会需要这些记录。",next:"result",score:{crow:3,dale:1},tag:"observe"},
+    {text:"某个人的名字。因为我不想让他被抹掉。",next:"result",score:{jacob:3,laura:1},tag:"memory"},
+    {text:"一条关于规则的总结。掌控比理解更重要。",next:"result",score:{owl:2,albert:1},tag:"control"},
+    {text:"一句给后来者的话：先保证自己能出去。",next:"result",score:{rose:1,harvey:1,bob:2},tag:"leave"}
+  ]}
+};
+
+let playedOnce = false;
+let audioCtx = null;
+let state = {
+  currentId:"start",
+  history:[],
+  scores:{},
+  tags:[],
+  routeStart:null,
+  runCount:Number(localStorage.getItem("rusty_run_count") || "0"),
+  secretUnlocked:localStorage.getItem("rusty_secret_unlocked") === "1"
+};
+
+function initScores(){
+  state.scores = {};
+  Object.keys(endings).forEach(k => state.scores[k] = 0);
+  ["jacob","frank"].forEach(k=>{ if(state.scores[k]===undefined) state.scores[k]=0; });
+  state.tags = [];
+  state.routeStart = null;
+}
+function startTest(){
+  if(!playedOnce) safePlayBGM();
+  state.currentId = "start";
+  state.history = [];
+  initScores();
+  renderNode();
+}
+function sumScores(base, add){
+  const copy = {...base};
+  Object.keys(add || {}).forEach(k => copy[k] = (copy[k] || 0) + add[k]);
+  return copy;
+}
+function totalQuestions(){ return 12; }
+function currentStep(){ return state.history.length + 1; }
+function progressPercent(){ return Math.round((state.history.length / totalQuestions()) * 100); }
+
+function getPathTrail(){
+  const labels = [];
+  state.history.forEach(item => {
+    const label = nodes[item.nodeId]?.pathLabel;
+    if(label && labels[labels.length-1] !== label) labels.push(label);
+  });
+  const currentLabel = nodes[state.currentId]?.pathLabel;
+  if(currentLabel && labels[labels.length-1] !== currentLabel) labels.push(currentLabel);
+  return labels;
+}
+
+function normalizeScores(raw){
+  const s = {...raw};
+  s.laura += (s.jacob || 0) * 0.65;
+  s.crow += (s.frank || 0) * 0.55;
+  s.william += (s.jacob || 0) * 0.25;
+  s.elizabeth += (s.frank || 0) * 0.25;
+  return s;
+}
+function sortedScores(){
+  const norm = normalizeScores(state.scores);
+  return Object.entries(endings).map(([k,v]) => [k, +(norm[k] || 0).toFixed(2)]).sort((a,b)=>b[1]-a[1]);
+}
+function baseEndingKey(){
+  const ranked = sortedScores();
+  return ranked[0][0];
+}
+
+function evaluateEnding(){
+  const tags = state.tags;
+  const observeCount = tags.filter(t => t === "observe").length;
+  const memoryCount = tags.filter(t => t === "memory").length;
+  const leaveCount = tags.filter(t => t === "leave" || t === "escape").length;
+  const controlCount = tags.filter(t => t === "control").length;
+
+  if (state.secretUnlocked && state.runCount >= 1 && tags.includes("remember") && observeCount >= 4) {
+    return { type: "hidden", key: "hidden_end", pool: specialEndings };
+  }
+  if (state.routeStart === "mirror" && observeCount >= 4 && !tags.includes("leave")) {
+    return { type: "true", key: "true_end", pool: specialEndings };
+  }
+  if ((state.routeStart === "lake" || state.routeStart === "mirror") && memoryCount >= 4 && tags.includes("lookback")) {
+    return { type: "hidden", key: "hidden_end", pool: specialEndings };
+  }
+  if (leaveCount >= 3 && currentStep() >= 12) {
+    return { type: "false", key: "false_end", pool: specialEndings };
+  }
+  if (state.routeStart === "tower" && controlCount >= 4 && !tags.includes("repair")) {
+    return { type: "true", key: "true_end", pool: specialEndings };
+  }
+  return { type: "normal", key: baseEndingKey(), pool: endings };
+}
+
+function updateRouteVisual(route){
+  const body = document.body;
+  body.className = "";
+  body.classList.add(`route-${route || "default"}`);
+}
+
+function currentIntroLines(){
+  if(state.runCount >= 1){
+    return [
+      "钟声又响了。你已经不是第一次来到这里。",
+      "走廊比上一次更安静，像在等你主动想起什么。",
+      "有些门会记得你，有些结局也会。"
+    ];
+  }
+  return introLines;
+}
+function showBlackout(text, duration=1600){
+  const box = document.getElementById("blackoutOverlay");
+  const txt = document.getElementById("blackoutText");
+  if(!box || !txt) return;
+  txt.textContent = text;
+  box.classList.add("show");
+  setTimeout(()=>box.classList.remove("show"), duration);
+}
+function triggerPseudoEnding(){
+  showBlackout("门开了。\n\n你以为自己已经离开。\n\n但脚步声仍在你身后。", 1650);
+}
+function triggerEasterEgg(){
+  state.secretUnlocked = true;
+  localStorage.setItem("rusty_secret_unlocked", "1");
+  soundEnding();
+  showBlackout("你按下了本不该被发现的按钮。\n\n旅馆记住了你。", 1700);
+}
+function renderIntro(){
+  updateRouteVisual("default");
+  const app = document.getElementById("app");
+  app.innerHTML = `
+    <div class="intro fade">
+      <div class="topBar">
+        <div class="leftTop"></div>
+        <div class="rightTop">
+          <button class="iconBtn" onclick="toggleBGM()" title="播放/暂停环境音">♫</button>
+        </div>
+      </div>
+      <h2 class="introTitle">推开门之前</h2>
+      ${state.runCount >= 1 ? `<div class="ngTag">SECOND CYCLE · 二周目已开启</div>` : ``}
+      <div class="typewriter" id="typewriter"></div>
+      <div class="choiceRow">
+        <button class="btn" onclick="startTest(); soundStart();">开始测试</button>
+        <button class="choiceBtn" onclick="toggleBGM()">播放 / 暂停环境音</button>
+      </div>
+      <div class="audioStatus" id="audioStatus">环境音已内置，可安全发布</div>
+    </div>
+  `;
+  playTypewriter(currentIntroLines(), "typewriter");
+  updateAudioStatus();
+}
+
+function renderNode(){
+  const node = nodes[state.currentId];
+  const trail = getPathTrail();
+  updateRouteVisual(node.route || "default");
+  const app = document.getElementById("app");
+  app.innerHTML = `
+    <div class="fade">
+      <div class="topBar">
+        <div class="leftTop">
+          <div class="pill">${node.chapter}</div>
+          <div class="pill">${currentStep()} / ${totalQuestions()}</div>
+        </div>
+        <div class="rightTop">
+          <button class="iconBtn" onclick="toggleBGM()" title="播放/暂停环境音">♫</button>
+          <button class="choiceBtn" onclick="goBack()" ${state.history.length ? "" : "disabled style='opacity:.45;cursor:not-allowed'"}>返回上一题</button>
+        </div>
+      </div>
+
+      <div class="progressWrap">
+        <div class="progressText">进度 ${currentStep()} / ${totalQuestions()}</div>
+        <div class="progress"><div class="bar" style="width:${progressPercent()}%"></div></div>
+      </div>
+
+      <div class="chapter">${node.pathLabel}</div>
+      <div class="question">${node.q}</div>
+      <div class="questionHint">后续问题会被你的选择改变。</div>
+
+      <div class="options">
+        ${node.options.map((opt, i)=>`
+          <button class="option" onclick="choose(${i})">
+            <small>选项 ${["A","B","C","D"][i]}</small>
+            ${opt.text}
+          </button>
+        `).join("")}
+      </div>
+
+      <div class="pathBox">
+        <div class="pathTitle">你走过的路线</div>
+        <div class="pathTrail">
+          ${trail.map(t=>`<div class="pathStep">${t}</div>`).join("")}
+        </div>
+      </div>
+
+      <div class="audioStatus" id="audioStatus"></div>
+    </div>
+  `;
+  updateAudioStatus();
+}
+
+function choose(index){
+  flashScreen();
+  soundChoose();
+  const node = nodes[state.currentId];
+  const opt = node.options[index];
+  if(state.currentId === "start"){
+    state.routeStart = opt.tag;
+  }
+  state.history.push({
+    nodeId: state.currentId,
+    previousScores: {...state.scores},
+    previousTags: [...state.tags],
+    previousRouteStart: state.routeStart
+  });
+  state.scores = sumScores(state.scores, opt.score);
+  if(opt.tag) state.tags.push(opt.tag);
+
+  const leaveCountNow = state.tags.filter(t => t === "leave" || t === "escape").length;
+  if(state.currentId === "cross_7" && opt.tag === "leave" && leaveCountNow >= 2){
+    triggerPseudoEnding();
+  }
+
+  if(opt.next === "result") {
+    state.runCount += 1;
+    localStorage.setItem("rusty_run_count", String(state.runCount));
+    renderResult();
+    soundEnding();
+  } else {
+    state.currentId = opt.next;
+    const nextNode = nodes[state.currentId];
+    renderNode();
+    if(typeof showChapterCard === "function") showChapterCard(nextNode.chapter, nextNode.pathLabel);
+  }
+}
+
+function goBack(){
+  if(!state.history.length) return;
+  flashScreen();
+  soundBack();
+  const last = state.history.pop();
+  state.currentId = last.nodeId;
+  state.scores = {...last.previousScores};
+  state.tags = [...last.previousTags];
+  state.routeStart = last.previousRouteStart;
+  renderNode();
+}
+
+function endingLabel(type){
+  if(type === "true") return "真结局";
+  if(type === "hidden") return "隐藏结局";
+  if(type === "false") return "假结局";
+  return "普通结局";
+}
+
+function renderResult(){
+  updateRouteVisual("ending");
+  const result = evaluateEnding();
+  const d = result.pool[result.key];
+  const ranking = sortedScores().slice(0,8);
+  const trail = getPathTrail();
+  const app = document.getElementById("app");
+  app.innerHTML = `
+    <div class="endingCard">
+      <div class="topBar">
+        <div class="leftTop">
+          <div class="pill">终章</div>
+          <div class="pill">结局已生成</div>
+        </div>
+        <div class="rightTop">
+          <button class="iconBtn" onclick="toggleBGM()" title="播放/暂停环境音">♫</button>
+          <button class="choiceBtn" onclick="goBack()">返回上一题</button>
+        </div>
+      </div>
+
+      <div class="endingHead">
+        <div class="tiny">THE LAKE REMEMBERS YOUR PATH</div>
+        <div class="portraitGlow"></div>
+        <div class="tarot">
+          <div class="tarotSymbol">${d.symbol}</div>
+          <div class="tarotName">${d.name}</div>
+          <div class="tarotSub">ENDING ARCHIVE</div>
+        </div>
+        <h2 class="endingName">${d.name}</h2>
+        <div class="endingTitle">${d.title}</div>
+      </div>
+
+      <div class="endingTypeBox">
+        <div class="endingTypeTitle">结局类型</div>
+        <div class="endingTypeTag">${endingLabel(result.type)}</div>
+      </div>
+
+      <div class="endingDesc">${d.desc}</div>
+
+      <div class="archive">
+        ${d.traits.map(t=>`<div class="archiveItem">${t}</div>`).join("")}
+      </div>
+
+      <div class="pathBox">
+        <div class="pathTitle">你走出的路线</div>
+        <div class="pathTrail">
+          ${trail.map(t=>`<div class="pathStep">${t}</div>`).join("")}
+        </div>
+      </div>
+
+      <div class="scoreBoard">
+        <div class="scoreTitle">你的角色倾向</div>
+        <div class="scoreGrid">
+          ${ranking.map(([k,v])=>`
+            <div class="scoreItem">
+              <span>${endings[k].name}</span>
+              <strong>${v}</strong>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+
+      <div class="choiceRow">
+        <button class="btn" onclick="startTest(); soundStart();">再测一次</button>
+        <button class="choiceBtn shareBtn" onclick="copyResult()">复制结果文案</button>
+        <button class="choiceBtn" onclick="renderIntro()">返回首页</button>
+      </div>
+      <div class="audioStatus" id="audioStatus"></div>
+    </div>
+  `;
+  updateAudioStatus();
+}
+
+function copyResult(){
+  const result = evaluateEnding();
+  const d = result.pool[result.key];
+  const trail = getPathTrail().join(" → ");
+  const rank = sortedScores().slice(0,3).map(([k,v])=>`${endings[k].name}(${v})`).join(" / ");
+  const text = `我在《锈湖人格测试》中的结局是：${d.name}｜${d.title}\n结局类型：${endingLabel(result.type)}\n路线：${trail}\n${d.desc}\n角色倾向前三：${rank}`;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(()=>alert("结果文案已复制")).catch(()=>fallbackCopy(text));
+  } else fallbackCopy(text);
+}
+function fallbackCopy(text){
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand("copy");
+  document.body.removeChild(ta);
+  alert("结果文案已复制");
+}
+function playTypewriter(lines, id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  let text = "", lineIndex = 0, charIndex = 0;
+  function step(){
+    if(!document.getElementById(id)) return;
+    if(lineIndex >= lines.length) return;
+    const line = lines[lineIndex];
+    text += line.charAt(charIndex);
+    el.innerHTML = text.replace(/\n/g,"<br>");
+    charIndex++;
+    if(charIndex < line.length) setTimeout(step, 34);
+    else { text += "<br>"; lineIndex++; charIndex = 0; setTimeout(step, 240); }
+  }
+  step();
+}
+let ambientOn = false;
+let ambientNodes = [];
+
+function safePlayBGM(){
+  startAmbient();
+}
+
+function startAmbient(){
+  const ctx = getCtx();
+  if(!ctx || ambientOn) return;
+  ambientOn = true;
+
+  const osc1 = ctx.createOscillator();
+  const gain1 = ctx.createGain();
+  osc1.type = "sine";
+  osc1.frequency.value = 80;
+  gain1.gain.value = 0.02;
+  osc1.connect(gain1).connect(ctx.destination);
+  osc1.start();
+
+  const osc2 = ctx.createOscillator();
+  const gain2 = ctx.createGain();
+  osc2.type = "triangle";
+  osc2.frequency.value = 220;
+  gain2.gain.value = 0.01;
+  osc2.connect(gain2).connect(ctx.destination);
+  osc2.start();
+
+  ambientNodes = [osc1, osc2];
+  updateAudioStatus("环境音已开启");
+}
+
+function stopAmbient(){
+  ambientOn = false;
+  ambientNodes.forEach(n => { try { n.stop(); } catch(e) {} });
+  ambientNodes = [];
+  updateAudioStatus("环境音已关闭");
+}
+
+function toggleBGM(){
+  if(!ambientOn){
+    startAmbient();
+    soundSoftBell();
+  }else{
+    stopAmbient();
+  }
+}
+
+function updateAudioStatus(msg){
+  const status = document.getElementById("audioStatus");
+  if(!status) return;
+  status.textContent = msg ? msg : (ambientOn ? "环境音已开启" : "环境音已关闭");
+}
+
+/* 音效系统：纯 WebAudio，无需额外音频文件 */
+function getCtx(){
+  if(!audioCtx){
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if(!Ctx) return null;
+    audioCtx = new Ctx();
+  }
+  if(audioCtx.state === "suspended") audioCtx.resume();
+  return audioCtx;
+}
+function tone(freq=440, duration=0.08, type="sine", volume=0.03, startOffset=0){
+  const ctx = getCtx();
+  if(!ctx) return;
+  const now = ctx.currentTime + startOffset;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, now);
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(volume, now + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+  osc.connect(gain).connect(ctx.destination);
+  osc.start(now);
+  osc.stop(now + duration + 0.02);
+}
+function noiseBurst(duration=0.05, volume=0.02, highpass=900){
+  const ctx = getCtx();
+  if(!ctx) return;
+  const buffer = ctx.createBuffer(1, ctx.sampleRate * duration, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for(let i=0;i<data.length;i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i/data.length, 2);
+  const source = ctx.createBufferSource();
+  const filter = ctx.createBiquadFilter();
+  filter.type = "highpass";
+  filter.frequency.value = highpass;
+  const gain = ctx.createGain();
+  gain.gain.value = volume;
+  source.buffer = buffer;
+  source.connect(filter).connect(gain).connect(ctx.destination);
+  source.start();
+}
+function soundChoose(){
+  tone(540, 0.05, "triangle", 0.028, 0);
+  tone(710, 0.07, "triangle", 0.025, 0.03);
+  noiseBurst(0.03, 0.01, 1200);
+}
+function soundBack(){
+  tone(420, 0.05, "triangle", 0.025, 0);
+  tone(320, 0.08, "triangle", 0.02, 0.03);
+}
+function soundStart(){
+  tone(330, 0.08, "sine", 0.02, 0);
+  tone(440, 0.12, "sine", 0.022, 0.04);
+  tone(550, 0.16, "sine", 0.018, 0.09);
+}
+function soundEnding(){
+  tone(392, 0.25, "sine", 0.02, 0);
+  tone(523.25, 0.32, "sine", 0.022, 0.12);
+  tone(659.25, 0.42, "sine", 0.018, 0.26);
+}
+function soundSoftBell(){
+  tone(660, 0.18, "sine", 0.014, 0);
+  tone(1320, 0.12, "sine", 0.01, 0.04);
+}
+
+
+function flashScreen(){
+  const el = document.getElementById("screenFlash");
+  if(!el) return;
+  el.classList.add("active");
+  setTimeout(()=>el.classList.remove("active"), 150);
+}
+function showChapterCard(chapter, label){
+  const overlay = document.getElementById("chapterOverlay");
+  if(!overlay) return;
+  document.getElementById("chapterSmall").textContent = chapter || "下一章";
+  document.getElementById("chapterTitle").textContent = label || "旅馆更深处";
+  document.getElementById("chapterSub").textContent = "门轻轻合上，又有新的房间亮起。";
+  overlay.classList.add("show");
+  setTimeout(()=>overlay.classList.remove("show"), 560);
+}
+
+renderIntro();
+</script>
+<button class="secretBtn" onclick="triggerEasterEgg()" title="..."></button>
+</body>
+</html>
